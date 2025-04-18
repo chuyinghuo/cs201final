@@ -1,4 +1,3 @@
-Student_ID,First_Name,Last_Name,Email,Gender,Age,Department,Attendance (%),Midterm_Score,Final_Score,Assignments_Avg,Quizzes_Avg,Participation_Score,Projects_Score,Total_Score,Grade,Study_Hours_per_Week,Extracurricular_Activities,Internet_Access_at_Home,Parent_Education_Level,Family_Income_Level,Stress_Level (1-10),Sleep_Hours_per_Night
 S1000,Omar,Williams,student0@university.com,Female,22,Engineering,52.29,55.03,57.82,84.22,74.06,3.99,85.9,56.09,F,6.2,No,Yes,High School,Medium,5,4.7
 S1001,Maria,Brown,student1@university.com,Male,18,Engineering,97.27,97.23,45.8,,94.24,8.32,55.65,50.64,A,19.0,No,Yes,None,Medium,4,9.0
 S1002,Ahmed,Jones,student2@university.com,Male,24,Business,57.19,67.05,93.68,67.7,85.7,5.05,73.79,70.3,D,20.7,No,Yes,Master's,Low,6,6.2
