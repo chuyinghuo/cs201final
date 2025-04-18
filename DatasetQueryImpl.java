@@ -1,7 +1,7 @@
 import java.sql.Timestamp;
 import java.util.*;
 
-public class DatasetQueryImpl implements DataQuery<Record> {
+public class DatasetQueryImpl implements DatasetQuery<Record> {
 
     private List<Record> records;
 
