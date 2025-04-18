@@ -31,7 +31,7 @@ public interface DataQuery<T> {
      */
     List<T> rangeQuery(String attribute, Comparable upperBound);
 
-    /**
+    /**git 
      * Returns the average value of the specified attribute during a given time frame.
      * 
      * @param attribute The attribute/field to calculate the average for.
