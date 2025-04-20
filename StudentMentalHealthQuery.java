@@ -50,9 +50,10 @@ public interface StudentMentalHealthQuery {
      * - average work pressure
      * - average cumulative GPA
      * - average sleep duration
-    * 
-    * @return A double which is the average of the desired attribute
-    */
+     * @param atttribute The numeric attribute (e.g., "age", "academic pressure")
+     * 
+     * @return A double which is the average of the desired attribute
+     */
     double getDatasetStatistics(String attribute);
 
     
