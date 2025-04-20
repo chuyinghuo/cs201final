@@ -83,11 +83,6 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
         throw new UnsupportedOperationException("getDatasetStatistics not implemented yet");
     }
 
-    @Override
-    public int getRecordCount() {
-        throw new UnsupportedOperationException("getRecordCount not implemented yet");
-    }
-
     private boolean parseBooleanInput(Object value) {
         if (value instanceof Boolean b) return b;
         if (value instanceof String s) return s.equalsIgnoreCase("yes");
