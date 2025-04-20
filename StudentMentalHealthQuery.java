@@ -8,6 +8,8 @@ import java.util.Map;
 * queries on various attributes of student mental health data.
 */
 public interface StudentMentalHealthQuery {
+
+
     /**
     * Loads the student mental health dataset from the specified file path
     * @param filePath Path to the dataset file (CSV format)
@@ -15,13 +17,8 @@ public interface StudentMentalHealthQuery {
     * @throws IOException If there's an error reading the file
     */
     int loadDataset(String filePath) throws IOException;
-    /**
-    * Loads the student mental health dataset from the specified file path
-    * @param filePath Path to the dataset file (CSV format)
-    * @return Number of records loaded
-    * @throws IOException If there's an error reading the file
-    */
-    List<Record> exactMatchQuery(String attribute, Object value);
+    
+
 
     /**
     * Returns all records that exactly match the specified criteria
@@ -31,8 +28,9 @@ public interface StudentMentalHealthQuery {
     * @throws IllegalArgumentException For unsupported attributes or invalid value types
     */
 
-    List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound);
+    List<Record> exactMatchQuery(String attribute, Object value);
 
+    
     /**
     * Returns all records where the specified attribute falls within the given range
     * @param attribute The numeric attribute (e.g., "age", "academic pressure")
@@ -41,8 +39,9 @@ public interface StudentMentalHealthQuery {
     * @return List of matching student records
     * @throws IllegalArgumentException For non-numeric attributes or invalid bounds
     */
+    List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound);
     
-    Map<String, Object> getDatasetStatistics();
+
 
     /**
      * Returns averaged statistics about the dataset, including
@@ -52,8 +51,11 @@ public interface StudentMentalHealthQuery {
      * - average cumulative GPA
      * - average sleep duration
     * 
-    * @return A map of statistic names to their values
+    * @return A map of statistic name to their value
     */
+    Map<String, Object> getDatasetStatistics(String attribute);
+
+    
     
     
 }

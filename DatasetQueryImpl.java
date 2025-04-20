@@ -79,7 +79,7 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
     }
 
     @Override
-    public Map<String, Object> getDatasetStatistics() {
+    public Map<String, Object> getDatasetStatistics(String attribute) {
         throw new UnsupportedOperationException("getDatasetStatistics not implemented yet");
     }
 
