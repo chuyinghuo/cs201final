@@ -49,5 +49,4 @@ public interface StudentMentalHealthQuery {
     * 
     * @return 
     */
-    int getRecordCount();
 }
