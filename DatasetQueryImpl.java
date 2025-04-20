@@ -1,165 +1,96 @@
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class DatasetQueryImpl implements DatasetQuery<Record> {
+public class DatasetQueryImpl implements StudentMentalHealthQuery {
+    private List<Record> records = new ArrayList<>();
 
-    private List<Record> records;
-
-    public DatasetQueryImpl(String filePath) {
+    @Override
+    public int loadDataset(String filePath) throws IOException {
         this.records = CSVLoader.loadRecords(filePath);
+        return records.size();
     }
 
     @Override
     public List<Record> exactMatchQuery(String attribute, Object value) {
         List<Record> result = new ArrayList<>();
+        String attrLower = attribute.toLowerCase().trim();
+
         for (Record record : records) {
             boolean match = false;
-            String attrLower = attribute.toLowerCase().trim();
             switch (attrLower) {
-                case "id":
-                    if (value instanceof Integer) {
-                        match = (record.id == (Integer) value);
-                    }
-                    break;
                 case "gender":
-                    if (value instanceof String) {
-                        match = record.gender.equalsIgnoreCase((String) value);
-                    }
+                    if (value instanceof String s)
+                        match = record.getGender().equalsIgnoreCase(s.trim());
                     break;
                 case "age":
-                    if (value instanceof Double) {
-                        match = (record.age == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.age == ((Integer) value).doubleValue());
-                    }
+                    if (value instanceof Number n)
+                        match = (record.getAge() == n.doubleValue());
                     break;
                 case "city":
-                    if (value instanceof String) {
-                        match = record.city.equalsIgnoreCase((String) value);
-                    }
+                    if (value instanceof String s)
+                        match = record.getCity().equalsIgnoreCase(s.trim());
                     break;
                 case "profession":
-                    if (value instanceof String) {
-                        match = record.profession.equalsIgnoreCase((String) value);
-                    }
+                    if (value instanceof String s)
+                        match = record.getProfession().equalsIgnoreCase(s.trim());
                     break;
                 case "academic pressure":
-                    if (value instanceof Double) {
-                        match = (record.academicPressure == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.academicPressure == ((Integer) value).doubleValue());
-                    }
-                    break;
-                case "work pressure":
-                    if (value instanceof Double) {
-                        match = (record.workPressure == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.workPressure == ((Integer) value).doubleValue());
-                    }
-                    break;
-                case "cgpa":
-                    if (value instanceof Double) {
-                        match = (record.cgpa == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.cgpa == ((Integer) value).doubleValue());
-                    }
+                    if (value instanceof Number n)
+                        match = (record.getAcademicPressure() == n.doubleValue());
                     break;
                 case "study satisfaction":
-                    if (value instanceof Double) {
-                        match = (record.studySatisfaction == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.studySatisfaction == ((Integer) value).doubleValue());
-                    }
-                    break;
-                case "job satisfaction":
-                    if (value instanceof Double) {
-                        match = (record.jobSatisfaction == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.jobSatisfaction == ((Integer) value).doubleValue());
-                    }
-                    break;
-                case "sleep duration":
-                    if (value instanceof String) {
-                        match = record.sleepDuration.equalsIgnoreCase((String) value);
-                    }
-                    break;
-                case "dietary habits":
-                    if (value instanceof String) {
-                        match = record.dietaryHabits.equalsIgnoreCase((String) value);
-                    }
+                    if (value instanceof Number n)
+                        match = (record.getStudySatisfaction() == n.doubleValue());
                     break;
                 case "degree":
-                    if (value instanceof String) {
-                        match = record.degree.equalsIgnoreCase((String) value);
-                    }
+                    if (value instanceof String s)
+                        match = record.getDegree().equalsIgnoreCase(s.trim());
                     break;
-                case "have you ever had suicidal thoughts?": // Assuming the CSV header has a trailing '?'
-                    if (value instanceof Boolean) {
-                        match = (record.suicidalThoughts == (Boolean) value);
-                    } else if (value instanceof String) {
-                        String strValue = ((String) value).trim();
-                        boolean boolValue = strValue.equalsIgnoreCase("yes");
-                        match = (record.suicidalThoughts == boolValue);
-                    }
-                    break;
-                case "work/study hours":
-                    if (value instanceof Double) {
-                        match = (record.workStudyHours == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.workStudyHours == ((Integer) value).doubleValue());
-                    }
-                    break;
-                case "financial stress":
-                    if (value instanceof Double) {
-                        match = (record.financialStress == (Double) value);
-                    } else if (value instanceof Integer) {
-                        match = (record.financialStress == ((Integer) value).doubleValue());
-                    }
+                case "have you ever had suicidal thoughts?":
+                    match = parseBooleanInput(value) == record.getSuicidalThoughts();
                     break;
                 case "family history of mental illness":
-                    if (value instanceof Boolean) {
-                        match = (record.familyHistoryMentalIllness == (Boolean) value);
-                    } else if (value instanceof String) {
-                        String strValue = ((String) value).trim();
-                        boolean boolValue = strValue.equalsIgnoreCase("yes");
-                        match = (record.familyHistoryMentalIllness == boolValue);
-                    }
+                    match = parseBooleanInput(value) == record.getFamilyHistoryMentalIllness();
                     break;
                 case "depression":
-                    if (value instanceof Integer) {
-                        match = (record.depression == (Integer) value);
-                    } else if (value instanceof Double) {
-                        match = (record.depression == ((Double) value).intValue());
-                    }
+                    if (value instanceof Number n)
+                        match = (record.getDepression() == n.intValue());
                     break;
-                case "timestamp":
-                    if (value instanceof Timestamp) {
-                        match = record.getTimestamp().equals((Timestamp) value);
-                    }
+                case "financial stress":
+                    if (value instanceof Number n)
+                        match = (record.getFinancialStress() == n.doubleValue());
                     break;
                 default:
-                    System.err.println("Attribute not recognized: " + attribute);
-                    break;
+                    throw new IllegalArgumentException("Unsupported attribute: " + attribute);
             }
-            if (match) {
-                result.add(record);
-            }
+
+            if (match) result.add(record);
         }
+
         return result;
     }
 
     @Override
     public List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rangeQuery'");
+        throw new UnsupportedOperationException("rangeQuery not implemented yet");
     }
 
     @Override
-    public List<Record> averageQuery(String attribute, Timestamp startTime, Timestamp endTime) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'averageQuery'");
+    public Map<String, Object> getDatasetStatistics() {
+        throw new UnsupportedOperationException("getDatasetStatistics not implemented yet");
     }
-    
 
+    @Override
+    public int getRecordCount() {
+        throw new UnsupportedOperationException("getRecordCount not implemented yet");
+    }
+
+    private boolean parseBooleanInput(Object value) {
+        if (value instanceof Boolean b) return b;
+        if (value instanceof String s) return s.equalsIgnoreCase("yes");
+        throw new IllegalArgumentException("Expected boolean or string 'yes'/'no'");
+    }
 }

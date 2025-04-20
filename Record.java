@@ -1,59 +1,43 @@
-import java.sql.Timestamp;
-
 public class Record {
-    // Existing fields...
-    int id;
-    String gender;
-    double age;
-    String city;
-    String profession;
-    double academicPressure;
-    double workPressure;
-    double cgpa;
-    double studySatisfaction;
-    double jobSatisfaction;
-    String sleepDuration; // text like "5-6 hours"
-    String dietaryHabits;
-    String degree;
-    boolean suicidalThoughts;
-    double workStudyHours;
-    double financialStress;
-    boolean familyHistoryMentalIllness;
-    int depression;
+    private String gender;
+    private double age;
+    private String city;
+    private String profession;
+    private double academicPressure;
+    private double studySatisfaction;
+    private String degree;
+    private boolean suicidalThoughts;
+    private boolean familyHistoryMentalIllness;
+    private int depression;
+    private double financialStress;
 
-    // Add a timestamp field
-    private Timestamp timestamp;  // Assuming this field exists in your CSV
-
-    // Constructor (add timestamp as needed)
-    public Record(int id, String gender, double age, String city, String profession,
-                  double academicPressure, double workPressure, double cgpa,
-                  double studySatisfaction, double jobSatisfaction, String sleepDuration,
-                  String dietaryHabits, String degree, boolean suicidalThoughts,
-                  double workStudyHours, double financialStress, boolean familyHistoryMentalIllness,
-                  int depression, Timestamp timestamp) {
-        this.id = id;
+    public Record(String gender, double age, String city, String profession, 
+                 double academicPressure, double studySatisfaction, String degree,
+                 boolean suicidalThoughts, boolean familyHistoryMentalIllness,
+                 int depression, double financialStress) {
         this.gender = gender;
         this.age = age;
         this.city = city;
         this.profession = profession;
         this.academicPressure = academicPressure;
-        this.workPressure = workPressure;
-        this.cgpa = cgpa;
         this.studySatisfaction = studySatisfaction;
-        this.jobSatisfaction = jobSatisfaction;
-        this.sleepDuration = sleepDuration;
-        this.dietaryHabits = dietaryHabits;
         this.degree = degree;
         this.suicidalThoughts = suicidalThoughts;
-        this.workStudyHours = workStudyHours;
-        this.financialStress = financialStress;
         this.familyHistoryMentalIllness = familyHistoryMentalIllness;
         this.depression = depression;
-        this.timestamp = timestamp;  // Initialize timestamp
+        this.financialStress = financialStress;
     }
 
-    // Getter for timestamp
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
+    // Getters
+    public String getGender() { return gender; }
+    public double getAge() { return age; }
+    public String getCity() { return city; }
+    public String getProfession() { return profession; }
+    public double getAcademicPressure() { return academicPressure; }
+    public double getStudySatisfaction() { return studySatisfaction; }
+    public String getDegree() { return degree; }
+    public boolean getSuicidalThoughts() { return suicidalThoughts; }
+    public boolean getFamilyHistoryMentalIllness() { return familyHistoryMentalIllness; }
+    public int getDepression() { return depression; }
+    public double getFinancialStress() { return financialStress; }
 }
