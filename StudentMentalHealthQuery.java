@@ -44,16 +44,16 @@ public interface StudentMentalHealthQuery {
 
 
     /**
-     * Returns averaged statistics about the dataset, including
+     * Returns averaged statistic about the dataset, including
      * - average age
      * - average academic pressure
      * - average work pressure
      * - average cumulative GPA
      * - average sleep duration
     * 
-    * @return A map of statistic name to their value
+    * @return A double which is the average of the desired attribute
     */
-    Map<String, Object> getDatasetStatistics(String attribute);
+    double getDatasetStatistics(String attribute);
 
     
     
