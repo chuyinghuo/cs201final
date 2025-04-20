@@ -15,6 +15,13 @@ public interface StudentMentalHealthQuery {
     * @throws IOException If there's an error reading the file
     */
     int loadDataset(String filePath) throws IOException;
+    /**
+    * Loads the student mental health dataset from the specified file path
+    * @param filePath Path to the dataset file (CSV format)
+    * @return Number of records loaded
+    * @throws IOException If there's an error reading the file
+    */
+    List<Record> exactMatchQuery(String attribute, Object value);
 
     /**
     * Returns all records that exactly match the specified criteria
@@ -23,7 +30,8 @@ public interface StudentMentalHealthQuery {
     * @return List of matching student records
     * @throws IllegalArgumentException For unsupported attributes or invalid value types
     */
-    List<Record> exactMatchQuery(String attribute, Object value);
+
+    List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound);
 
     /**
     * Returns all records where the specified attribute falls within the given range
@@ -33,20 +41,19 @@ public interface StudentMentalHealthQuery {
     * @return List of matching student records
     * @throws IllegalArgumentException For non-numeric attributes or invalid bounds
     */
-    List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound);
-
-    /**
-    * :
-    * 
-    * 
-    * 
-    * 
-    * @return 
-    */
+    
     Map<String, Object> getDatasetStatistics();
 
     /**
+     * Returns averaged statistics about the dataset, including
+     * - average age
+     * - average academic pressure
+     * - average work pressure
+     * - average cumulative GPA
+     * - average sleep duration
     * 
-    * @return 
+    * @return A map of statistic names to their values
     */
+    
+    
 }
