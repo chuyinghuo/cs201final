@@ -47,9 +47,8 @@ public interface StudentMentalHealthQuery {
      * Returns averaged statistic about the dataset, including
      * - average age
      * - average academic pressure
-     * - average work pressure
-     * - average cumulative GPA
-     * - average sleep duration
+     * - study satisfaction
+     * - financial stress
      * @param atttribute The numeric attribute (e.g., "age", "academic pressure")
      * 
      * @return A double which is the average of the desired attribute
