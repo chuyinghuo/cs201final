@@ -4,10 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 public class DatasetQueryImpl implements StudentMentalHealthQuery {
     private List<Record> records = new ArrayList<>();
 
+    // Add this package-private method for testing
+    void setTestRecords(List<Record> records) {
+        this.records = records;
+    }
+
+    public void clearRecordsForTesting() {
+        this.records = new ArrayList<>();
+    }
+        
     @Override
     public int loadDataset(String filePath) throws IOException {
         this.records = CSVLoader.loadRecords(filePath);
@@ -74,8 +82,9 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
         return result;
     }
 
+    @Override
     public List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound) {
-    if (lowerBound == null || upperBound == null) {
+        if (lowerBound == null || upperBound == null) {
         throw new IllegalArgumentException("Bounds cannot be null.");
     }
 
@@ -107,43 +116,43 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
     }
 
     return result;
-}
+           }
 
-@Override
-public double getDatasetStatistics(String attribute) {
-    if (records.isEmpty()) {
-        return 0.0; 
-    }
-
-    String attrLower = attribute.toLowerCase().trim();
-    double sum = 0.0;
-    int count = 0;
-
-    for (Record record : records) {
-        switch (attrLower) {
-            case "Age":
-                sum += record.getAge();
-                count++;
-                break;
-            case "Academic Pressure":
-                sum += record.getAcademicPressure();
-                count++;
-                break;
-            case "Study Satisfaction":
-                sum += record.getStudySatisfaction();
-                count++;
-                break;
-            case "Financial Stress":
-                sum += record.getFinancialStress();
-                count++;
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported attribute for statistics: " + attribute);
+    @Override
+    public double getDatasetStatistics(String attribute) {
+        if (records.isEmpty()) {
+            return 0.0; 
         }
+    
+        String attrLower = attribute.toLowerCase().trim();
+        double sum = 0.0;
+        int count = 0;
+    
+        for (Record record : records) {
+            switch (attrLower) {
+                case "Age":
+                    sum += record.getAge();
+                    count++;
+                    break;
+                case "Academic Pressure":
+                    sum += record.getAcademicPressure();
+                    count++;
+                    break;
+                case "Study Satisfaction":
+                    sum += record.getStudySatisfaction();
+                    count++;
+                    break;
+                case "Financial Stress":
+                    sum += record.getFinancialStress();
+                    count++;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported attribute for statistics: " + attribute);
+            }
+        }
+    
+        return sum / count;
     }
-
-    return sum / count;
-}
 
     private boolean parseBooleanInput(Object value) {
         if (value instanceof Boolean b) return b;
