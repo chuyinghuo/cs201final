@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,41 +24,65 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
     }
 
     @Override
-    public List<Record> exactMatchQuery(Map<String, Object> attributeValues) {
-        List<Record> result = new ArrayList<>();
-    
-        for (Record record : records) {
-            boolean match = true;
-            for (Map.Entry<String, Object> entry : attributeValues.entrySet()) {
-                String attr = entry.getKey().toLowerCase().trim();
-                Object value = entry.getValue();
-                boolean currentMatch = switch (attr) {
-                    case "gender" -> record.getGender().equalsIgnoreCase(value.toString());
-                    case "age" -> record.getAge() == ((Number) value).doubleValue();
-                    case "city" -> record.getCity().equalsIgnoreCase(value.toString());
-                    case "profession" -> record.getProfession().equalsIgnoreCase(value.toString());
-                    case "degree" -> record.getDegree().equalsIgnoreCase(value.toString());
-                    case "academic pressure" -> record.getAcademicPressure() == ((Number) value).doubleValue();
-                    case "study satisfaction" -> record.getStudySatisfaction() == ((Number) value).doubleValue();
-                    case "depression" -> record.getDepression() == ((Number) value).intValue();
-                    case "financial stress" -> record.getFinancialStress() == ((Number) value).doubleValue();
-                    case "have you ever had suicidal thoughts?" ->
-                        parseBooleanInput(value) == record.getSuicidalThoughts();
-                    case "family history of mental illness" ->
-                        parseBooleanInput(value) == record.getFamilyHistoryMentalIllness();
-                    default -> throw new IllegalArgumentException("Unsupported attribute: " + attr);
-                };
-    
-                if (!currentMatch) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) result.add(record);
-        }
-    
-        return result;
+public List<Record> exactMatchQuery(Map<String, Object> attributeValues) {
+    // Create temporary maps to simulate indexing
+    Map<String, Map<Object, List<Record>>> tempIndex = new HashMap<>();
+
+    for (String attr : attributeValues.keySet()) {
+        tempIndex.put(attr.toLowerCase().trim(), new HashMap<>());
     }
+
+    // Build temporary indexes
+    for (Record record : records) {
+        for (String attr : tempIndex.keySet()) {
+            Object key = switch (attr) {
+                case "gender" -> record.getGender().toLowerCase();
+                case "age" -> record.getAge();
+                case "city" -> record.getCity().toLowerCase();
+                case "profession" -> record.getProfession().toLowerCase();
+                case "degree" -> record.getDegree().toLowerCase();
+                case "academic pressure" -> record.getAcademicPressure();
+                case "study satisfaction" -> record.getStudySatisfaction();
+                case "depression" -> record.getDepression();
+                case "financial stress" -> record.getFinancialStress();
+                case "have you ever had suicidal thoughts?" -> record.getSuicidalThoughts();
+                case "family history of mental illness" -> record.getFamilyHistoryMentalIllness();
+                default -> throw new IllegalArgumentException("Unsupported attribute: " + attr);
+            };
+
+            tempIndex.get(attr).computeIfAbsent(key, k -> new ArrayList<>()).add(record);
+        }
+    }
+
+    // Collect candidate lists for each attribute
+    List<List<Record>> candidates = new ArrayList<>();
+    for (Map.Entry<String, Object> entry : attributeValues.entrySet()) {
+        String attr = entry.getKey().toLowerCase().trim();
+        Object value = normalizeValue(attr, entry.getValue());
+
+        List<Record> matching = tempIndex.get(attr).get(value);
+        if (matching == null) return new ArrayList<>(); // No match
+        candidates.add(matching);
+    }
+
+    // Intersect the lists
+    List<Record> result = new ArrayList<>(candidates.get(0));
+    for (int i = 1; i < candidates.size(); i++) {
+        result.retainAll(candidates.get(i));
+    }
+
+    return result;
+}
+
+private Object normalizeValue(String attr, Object value) {
+    return switch (attr) {
+        case "gender", "city", "profession", "degree" -> value.toString().toLowerCase();
+        case "have you ever had suicidal thoughts?", "family history of mental illness" -> parseBooleanInput(value);
+        case "age", "academic pressure", "study satisfaction", "financial stress" -> ((Number) value).doubleValue();
+        case "depression" -> ((Number) value).intValue();
+        default -> throw new IllegalArgumentException("Unsupported attribute: " + attr);
+    };
+}
 
     @Override
     public List<Record> rangeQuery(String attribute, Comparable lowerBound, Comparable upperBound) {
