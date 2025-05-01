@@ -107,19 +107,19 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
     
         for (Record record : records) {
             switch (attrLower) {
-                case "Age":
+                case "age":
                     sum += record.getAge();
                     count++;
                     break;
-                case "Academic Pressure":
+                case "academic pressure":
                     sum += record.getAcademicPressure();
                     count++;
                     break;
-                case "Study Satisfaction":
+                case "study satisfaction":
                     sum += record.getStudySatisfaction();
                     count++;
                     break;
-                case "Financial Stress":
+                case "financial stress":
                     sum += record.getFinancialStress();
                     count++;
                     break;
