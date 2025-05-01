@@ -23,62 +23,39 @@ public class DatasetQueryImpl implements StudentMentalHealthQuery {
     }
 
     @Override
-    public List<Record> exactMatchQuery(String attribute, Object value) {
+    public List<Record> exactMatchQuery(Map<String, Object> attributeValues) {
         List<Record> result = new ArrayList<>();
-        String attrLower = attribute.toLowerCase().trim();
-
+    
         for (Record record : records) {
-            boolean match = false;
-            switch (attrLower) {
-                case "gender":
-                    if (value instanceof String s)
-                        match = record.getGender().equalsIgnoreCase(s.trim());
+            boolean match = true;
+            for (Map.Entry<String, Object> entry : attributeValues.entrySet()) {
+                String attr = entry.getKey().toLowerCase().trim();
+                Object value = entry.getValue();
+                boolean currentMatch = switch (attr) {
+                    case "gender" -> record.getGender().equalsIgnoreCase(value.toString());
+                    case "age" -> record.getAge() == ((Number) value).doubleValue();
+                    case "city" -> record.getCity().equalsIgnoreCase(value.toString());
+                    case "profession" -> record.getProfession().equalsIgnoreCase(value.toString());
+                    case "degree" -> record.getDegree().equalsIgnoreCase(value.toString());
+                    case "academic pressure" -> record.getAcademicPressure() == ((Number) value).doubleValue();
+                    case "study satisfaction" -> record.getStudySatisfaction() == ((Number) value).doubleValue();
+                    case "depression" -> record.getDepression() == ((Number) value).intValue();
+                    case "financial stress" -> record.getFinancialStress() == ((Number) value).doubleValue();
+                    case "have you ever had suicidal thoughts?" ->
+                        parseBooleanInput(value) == record.getSuicidalThoughts();
+                    case "family history of mental illness" ->
+                        parseBooleanInput(value) == record.getFamilyHistoryMentalIllness();
+                    default -> throw new IllegalArgumentException("Unsupported attribute: " + attr);
+                };
+    
+                if (!currentMatch) {
+                    match = false;
                     break;
-                case "age":
-                    if (value instanceof Number n)
-                        match = (record.getAge() == n.doubleValue());
-                    break;
-                case "city":
-                    if (value instanceof String s)
-                        match = record.getCity().equalsIgnoreCase(s.trim());
-                    break;
-                case "profession":
-                    if (value instanceof String s)
-                        match = record.getProfession().equalsIgnoreCase(s.trim());
-                    break;
-                case "academic pressure":
-                    if (value instanceof Number n)
-                        match = (record.getAcademicPressure() == n.doubleValue());
-                    break;
-                case "study satisfaction":
-                    if (value instanceof Number n)
-                        match = (record.getStudySatisfaction() == n.doubleValue());
-                    break;
-                case "degree":
-                    if (value instanceof String s)
-                        match = record.getDegree().equalsIgnoreCase(s.trim());
-                    break;
-                case "have you ever had suicidal thoughts?":
-                    match = parseBooleanInput(value) == record.getSuicidalThoughts();
-                    break;
-                case "family history of mental illness":
-                    match = parseBooleanInput(value) == record.getFamilyHistoryMentalIllness();
-                    break;
-                case "depression":
-                    if (value instanceof Number n)
-                        match = (record.getDepression() == n.intValue());
-                    break;
-                case "financial stress":
-                    if (value instanceof Number n)
-                        match = (record.getFinancialStress() == n.doubleValue());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported attribute: " + attribute);
+                }
             }
-
             if (match) result.add(record);
         }
-
+    
         return result;
     }
 

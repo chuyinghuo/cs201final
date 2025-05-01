@@ -28,8 +28,7 @@ public interface StudentMentalHealthQuery {
     * @throws IllegalArgumentException For unsupported attributes or invalid value types
     */
 
-    List<Record> exactMatchQuery(String attribute, Object value);
-
+    public List<Record> exactMatchQuery(Map<String, Object> attributeValues);
     
     /**
     * Returns all records where the specified attribute falls within the given range
